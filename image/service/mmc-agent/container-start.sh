@@ -1,13 +1,29 @@
 #!/bin/bash -e
 
-FIRST_START_DONE="/etc/docker-mariadb-first-start-done"
+FIRST_START_DONE="/etc/docker-mmc-agent-first-start-done"
 
 # container first start
 if [ ! -e "$FIRST_START_DONE" ]; then
 
-  # fix permissions and ownership of /var/lib/mysql
-  chown -R mysql:mysql /var/lib/mysql
-  chmod 700 /var/lib/mysql
+
+  # add ldap schema
+  /usr/share/doc/mmc/contrib/base/mmc.schema
+
+  # configure NSS
+  /etc/nsswitch.conf
+  passwd:         ldap
+group:          ldap
+shadow:
+
+/etc/ldap/ldap.conf
+BASE
+URI
+
+  # audit config
+  mmc-helper audit init
+
+
+
 
   # config sql queries
   TEMP_FILE='/tmp/mysql-start.sql'

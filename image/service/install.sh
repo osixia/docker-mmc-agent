@@ -1,7 +1,17 @@
 #!/bin/bash -e
 # this script is run during the image build
 
-# MariaDB config
+# mmc-agent config
+
+sed -i -e "s/127.0.0.1/0.0.0.0/" /etc/mmc/agent/config.ini
+
+sed -i -e "s/login = mmc/login = $MMC_AGENT_LOGIN/" /etc/mmc/agent/config.ini
+sed -i -e "s/password = s3cr3t/password = $MMC_AGENT_PASSWORD/" /etc/mmc/agent/config.ini
+
+user mmc
+group	mmc
+umask 0007
+
 
 # We have a custom config file 
 if [ -e /osixia/mariadb/my.cnf ]; then

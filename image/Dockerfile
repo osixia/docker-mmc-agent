@@ -4,12 +4,15 @@ MAINTAINER Bertrand Gouny <bertrand.gouny@osixia.net>
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
 
+RUN groupadd -r mmc && useradd -r -g mmc mmc
+
 # Add MDS repository
 RUN echo "deb http://mds.mandriva.org/pub/mds/debian wheezy main" > /etc/apt/sources.list.d/mds.list
 
 # Install mmc-agent
 RUN apt-get -y update \
     && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes --no-install-recommends \
+    libnss-ldap \
     mmc-agent \
     python-mmc-base \
     python-mmc-dashboard \
