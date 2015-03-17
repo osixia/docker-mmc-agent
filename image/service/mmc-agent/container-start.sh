@@ -5,101 +5,47 @@ FIRST_START_DONE="/etc/docker-mmc-agent-first-start-done"
 # container first start
 if [ ! -e "$FIRST_START_DONE" ]; then
 
+  # mmc-agent login informations
+  sed -i -e "s|#*\s*login\s*=.*|login = $MMC_AGENT_LOGIN|" /etc/mmc/agent/config.ini
 
-  # add ldap schema
-  /usr/share/doc/mmc/contrib/base/mmc.schema
+  #All the passwords contained in MMC-related configuration files can be obfuscated using a base64 encoding.
+  #This is not a security feature, but at least somebody won’t be able to read accidentally a password.
+  PWD_BASE64=$(python -c 'print "'$MMC_AGENT_PASSWORD'".encode("base64")')
+  sed -i -e "s|#*\s*password\s*=.*|password = {base64}$PWD_BASE64|" /etc/mmc/agent/config.ini
 
-  # configure NSS
-  /etc/nsswitch.conf
-  passwd:         ldap
-group:          ldap
-shadow:
+  # SSL config
+  if [ "${USE_SSL,,}" == "true" ]; then
 
-/etc/ldap/ldap.conf
-BASE
-URI
+    sed -i -e "s|#*\s*enablessl\s*=.*|enablessl = 1|" /etc/mmc/agent/config.ini
 
-  # audit config
-  mmc-helper audit init
+    # if no pem file is available
+    if [ ! -e "/osixia/mmc-agent/ssl/$SSL_PEM_FILENAME" ]; then
 
+      # check certificat and key or create it
+      /sbin/ssl-kit "/osixia/mmc-agent/ssl/$SSL_CRT_FILENAME" "/osixia/mmc-agent/ssl/$SSL_KEY_FILENAME" --ca-crt=/osixia/mmc-agent/ssl/$SSL_CA_CRT_FILENAME
 
+      # mmc agent need a pem file with the crt and the key
+      cat /osixia/mmc-agent/ssl/$SSL_CRT_FILENAME /osixia/mmc-agent/ssl/$SSL_KEY_FILENAME > /osixia/mmc-agent/ssl/$SSL_PEM_FILENAME
 
+      sed -i -e "s|#*\s*localcert\s*=.*|localcert = /osixia/mmc-agent/ssl/$SSL_PEM_FILENAME|" /etc/mmc/agent/config.ini
+      sed -i -e "s|#*\s*cacert\s*=.*|cacert = /osixia/mmc-agent/ssl/$SSL_CA_CRT_FILENAME|" /etc/mmc/agent/config.ini
 
-  # config sql queries
-  TEMP_FILE='/tmp/mysql-start.sql'
+    fi
 
-  # The password for 'debian-sys-maint'@'localhost' is auto generated.
-  # The database inside of DATA_DIR may not have been generated with this password.
-  # So, we need to set this for our database to be portable.
-  # https://github.com/Painted-Fox/docker-mariadb/blob/master/scripts/first_run.sh
-  DB_MAINT_PASS=$(cat /etc/mysql/debian.cnf | grep -m 1 "password\s*=\s*"| sed 's/^password\s*=\s*//')
+    # verify peer ?
+    if [ "${SSL_VERIFY_PEER,,}" == "true" ]; then
+      sed -i -e "s|#*\s*verifypeer\s*=.*|verifypeer = 1|" /etc/mmc/agent/config.ini
+    else
+      sed -i -e "s|#*\s*verifypeer\s*=.*|verifypeer = 0|" /etc/mmc/agent/config.ini
+    fi
 
-  # database is uninitialized
-  if [ -z "$(ls -A /var/lib/mysql)" ]; then
-
-    # initializes the MySQL data directory and creates the system tables that it contains
-    mysql_install_db --datadir=/var/lib/mysql
-
-    # start MariaDB
-    service mysql start || true
-
-    # drop all user and test database
-    cat > "$TEMP_FILE" <<-EOSQL
-        DELETE FROM mysql.user ;
-        DROP DATABASE IF EXISTS test ;
-EOSQL
-
-    # add root user on specified networks
-    ROOT_ALLOWED_NETWORKS=($ROOT_ALLOWED_NETWORKS)
-    for network in "${ROOT_ALLOWED_NETWORKS[@]}"
-    do
-      if [ -n "${!network}" ]; then
-        echo "GRANT ALL PRIVILEGES ON *.* TO '$ROOT_USER'@'${!network}' IDENTIFIED BY '$ROOT_PWD' WITH GRANT OPTION ;" >> "$TEMP_FILE"
-      else
-        echo "GRANT ALL PRIVILEGES ON *.* TO '$ROOT_USER'@'${network}' IDENTIFIED BY '$ROOT_PWD' WITH GRANT OPTION ;" >> "$TEMP_FILE"
-      fi
-    done
-
-    echo "GRANT ALL PRIVILEGES ON *.* TO 'debian-sys-maint'@'localhost' IDENTIFIED BY '$DB_MAINT_PASS' ;" >> "$TEMP_FILE"
-    
-    # flush privileges
-    echo 'FLUSH PRIVILEGES ;' >> "$TEMP_FILE"
-
-    # execute config queries
-    mysql -u root < $TEMP_FILE
-
-    # prevent socket error on stop
-    sleep 1
-
-    # Stop MariaDB
-    service mysql stop
-
-  # database is initialized
   else
-
-    # start MariaDB
-    service mysql start || true
-
-    # drop all user and test database
-    cat > "$TEMP_FILE" <<-EOSQL
-        DELETE FROM mysql.user where user = 'debian-sys-maint' ;
-        FLUSH PRIVILEGES ;
-        GRANT ALL PRIVILEGES ON *.* TO 'debian-sys-maint'@'localhost' IDENTIFIED BY '$DB_MAINT_PASS' ;
-        FLUSH PRIVILEGES ;
-EOSQL
-
-    # execute config queries
-    mysql -u $ROOT_USER -p$ROOT_PWD < $TEMP_FILE
-
-    # prevent socket error on stop
-    sleep 1
-
-    # stop MariaDB
-    service mysql stop
-
+    # disable ssl
+    sed -i -e "s|#*\s*enablessl\s*=.*|enablessl = 0|" /etc/mmc/agent/config.ini
   fi
 
-  rm $TEMP_FILE
+  # base plugin configuration
+  /osixia/mmc-agent/config-plugin.sh "$MMC_BASE_PLUGIN" /etc/mmc/plugins/base.ini
 
   touch $FIRST_START_DONE
 fi

@@ -10,13 +10,12 @@ RUN groupadd -r mmc && useradd -r -g mmc mmc
 RUN echo "deb http://mds.mandriva.org/pub/mds/debian wheezy main" > /etc/apt/sources.list.d/mds.list
 
 # Install mmc-agent
-RUN apt-get -y update \
+RUN apt-get -y update && /sbin/enable-service ssl-kit \
     && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes --no-install-recommends \
     libnss-ldap \
     mmc-agent \
     python-mmc-base \
-    python-mmc-dashboard \
-    && 
+    python-mmc-dashboard
 
 # Add install script and mmc-agent assets
 ADD service/install.sh /tmp/install.sh
@@ -29,7 +28,7 @@ RUN ./tmp/install.sh \
 # Add default env variables
 ADD env.yml /etc/env.yml
 
-# Add MariaDB container start config & daemon
+# Add mmc-agent container start config & daemon
 ADD service/mmc-agent/container-start.sh /etc/my_init.d/mmc-agent
 ADD service/mmc-agent/daemon.sh /etc/service/mmc-agent/run
 
