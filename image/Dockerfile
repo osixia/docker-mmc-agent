@@ -9,13 +9,16 @@ RUN groupadd -r mmc && useradd -r -g mmc mmc
 # Add MDS repository
 RUN echo "deb http://mds.mandriva.org/pub/mds/debian wheezy main" > /etc/apt/sources.list.d/mds.list
 
+ADD services-available /etc/services-available/
+
 # Install mmc-agent
 RUN apt-get -y update && /sbin/enable-service ssl-kit \
     && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes --no-install-recommends \
     libnss-ldap \
     mmc-agent \
     python-mmc-base \
-    python-mmc-dashboard
+    python-mmc-dashboard \
+    && /sbin/enable-service mmc-ppolicy 
 
 # Add install script and mmc-agent assets
 ADD service/install.sh /tmp/install.sh

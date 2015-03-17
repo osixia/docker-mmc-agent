@@ -8,8 +8,8 @@ if [ ! -e "$FIRST_START_DONE" ]; then
   # mmc-agent login informations
   sed -i -e "s|#*\s*login\s*=.*|login = $MMC_AGENT_LOGIN|" /etc/mmc/agent/config.ini
 
-  #All the passwords contained in MMC-related configuration files can be obfuscated using a base64 encoding.
-  #This is not a security feature, but at least somebody won’t be able to read accidentally a password.
+  # all the passwords contained in MMC-related configuration files can be obfuscated using a base64 encoding.
+  # this is not a security feature, but at least somebody won’t be able to read accidentally a password.
   PWD_BASE64=$(python -c 'print "'$MMC_AGENT_PASSWORD'".encode("base64")')
   sed -i -e "s|#*\s*password\s*=.*|password = {base64}$PWD_BASE64|" /etc/mmc/agent/config.ini
 

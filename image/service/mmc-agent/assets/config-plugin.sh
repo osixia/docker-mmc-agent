@@ -23,14 +23,24 @@ plugin_config_value() {
   local key=${!info_key_value[0]}
   local value=${!info_key_value[1]}
 
+  local v;
   # the value contain a not empty variable
   if [ -n "${!value}" ]; then
-  	sed -i -e "s|#*\s*$key\s*=.*|$key = ${!value}|" $CONFIG_FILE
+    local v=${!value}
 
   # it's just a not empty value
   elif [ -n "$value" ]; then
-  	sed -i -e "s|#*\s*$key\s*=.*|$key = $value|" $CONFIG_FILE
+    local v=$value
   fi
+
+  # all the passwords contained in MMC-related configuration files can be obfuscated using a base64 encoding.
+  # this is not a security feature, but at least somebody won’t be able to read accidentally a password.
+  if [ "$key" == "password" ]; then
+    PWD_BASE64=$(python -c 'print "'$v'".encode("base64")')
+    v="{base64}$PWD_BASE64"
+  fi
+
+  sed -i -e "s|#*\s*$key\s*=.*|$key = $v|" $CONFIG_FILE
 }
 
 for section in "${CONFIG_SECTIONS[@]}"
@@ -41,16 +51,8 @@ do
 
   # it's a table of infos
   if [ "${#infos[@]}" -gt "1" ]; then
-
   	sed -i -e "s|#*\s*\[${!infos[0]}\]\s*|\[${!infos[0]}\]|" $CONFIG_FILE
     plugin_config "${infos[1]}"
-  
-  # it's just a section name 
-  # stored in a variable
-  elif [ -n "${!section}" ]; then
-  	sed -i  -e "s|#*\s*\[${!section}\]\s*|\[${!section}\]|" $CONFIG_FILE 
-  # directly
-  else
-  	sed -i -e "s|#*\s*\[${section}\]\s*|\[${section}\]|" $CONFIG_FILE
   fi
+
 done
