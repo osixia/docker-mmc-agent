@@ -21,7 +21,6 @@ sed -i -e "s|olcPPolicyDefault:.*|olcPPolicyDefault: $CONFIG_PPOLICY_DEFAULT,$CO
 
 
 # add ppolicy schema
-echo "ldapadd -H $LDAP_URL -D $LDAP_ADMIN_DN -w $LDAP_ADMIN_PASSWORD -Y EXTERNAL -f /etc/services-available/mmc-ppolicy/config/ppolicy.ldif"
 ldapadd -H $LDAP_URL -D $LDAP_ADMIN_DN -w $LDAP_ADMIN_PASSWORD -Y EXTERNAL -f /etc/services-available/mmc-ppolicy/config/ppolicy.ldif
 
 # load ppolicy module
