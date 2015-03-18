@@ -36,7 +36,7 @@ plugin_config_value() {
     echo "TLS_REQCERT $value" >> /etc/ldap/ldap.conf
   fi
 
-  # a bit tricky: uncomment $key between [section] and [
+  # a bit tricky: uncomment $key and set is value between [section] and [
   sed -i '/\['$sect'\]/,/\[/{/\['$sect'\]/n;/\[/!{s|#*\s*'$key'\s*=.*|'$key' = '$value'|g}}' $CONFIG_FILE
 
 }
