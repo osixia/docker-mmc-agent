@@ -1,5 +1,4 @@
 dn: cn=module,cn=config
-objectClass: olcModuleList
-cn: module
-olcModulePath: /usr/lib/ldap
+changetype: modify
+add: olcModuleLoad
 olcModuleLoad: ppolicy

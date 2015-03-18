@@ -1,15 +1,14 @@
 #!/bin/bash -e
 
-include /path/to/openldap/schema/ppolicy.schema
-...
-# Load the ppolicy module
-moduleload  ppolicy
-...
-# Add the overlay ppolicy to your OpenLDAP database
-database  bdb
-suffix    "dc=mandriva,dc=com"
-...
-overlay ppolicy
-ppolicy_default "cn=default,ou=Password Policies,dc=mandriva,dc=com"
+FIRST_START_DONE="/etc/docker-mmc-agent-sshlpk-first-start-done"
 
-ppolicyDN
+# container first start
+if [ ! -e "$FIRST_START_DONE" ]; then
+
+   # sshlpk plugin configuration
+  /osixia/mmc-agent/config-plugin.sh "$MMC_SSHLPK_PLUGIN" /etc/mmc/plugins/sshlpk.ini
+
+  touch $FIRST_START_DONE
+fi
+
+exit 0

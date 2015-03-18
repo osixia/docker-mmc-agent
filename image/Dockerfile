@@ -18,7 +18,7 @@ RUN apt-get -y update && /sbin/enable-service ssl-kit \
     mmc-agent \
     python-mmc-base \
     python-mmc-dashboard \
-    && /sbin/enable-service mmc-ppolicy 
+    && /sbin/enable-service mmc-mail mmc-ppolicy mmc-sshlpk
 
 # Add install script and mmc-agent assets
 ADD service/install.sh /tmp/install.sh

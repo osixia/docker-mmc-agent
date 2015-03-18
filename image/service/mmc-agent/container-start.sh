@@ -22,13 +22,20 @@ if [ ! -e "$FIRST_START_DONE" ]; then
     if [ ! -e "/osixia/mmc-agent/ssl/$SSL_PEM_FILENAME" ]; then
 
       # check certificat and key or create it
-      /sbin/ssl-kit "/osixia/mmc-agent/ssl/$SSL_CRT_FILENAME" "/osixia/mmc-agent/ssl/$SSL_KEY_FILENAME" --ca-crt=/osixia/mmc-agent/ssl/$SSL_CA_CRT_FILENAME
+      #/sbin/ssl-kit "/osixia/mmc-agent/ssl/$SSL_CRT_FILENAME" "/osixia/mmc-agent/ssl/$SSL_KEY_FILENAME" --ca-crt=/osixia/mmc-agent/ssl/$SSL_CA_CRT_FILENAME
+
+      /sbin/ssl-kit "/osixia/mmc-agent/ssl/$SSL_CRT_FILENAME" "/osixia/mmc-agent/ssl/$SSL_KEY_FILENAME"
 
       # mmc agent need a pem file with the crt and the key
-      cat /osixia/mmc-agent/ssl/$SSL_CRT_FILENAME /osixia/mmc-agent/ssl/$SSL_KEY_FILENAME > /osixia/mmc-agent/ssl/$SSL_PEM_FILENAME
+      #cat /osixia/mmc-agent/ssl/$SSL_CRT_FILENAME /osixia/mmc-agent/ssl/$SSL_KEY_FILENAME > /osixia/mmc-agent/ssl/$SSL_PEM_FILENAME
 
-      sed -i -e "s|#*\s*localcert\s*=.*|localcert = /osixia/mmc-agent/ssl/$SSL_PEM_FILENAME|" /etc/mmc/agent/config.ini
-      sed -i -e "s|#*\s*cacert\s*=.*|cacert = /osixia/mmc-agent/ssl/$SSL_CA_CRT_FILENAME|" /etc/mmc/agent/config.ini
+      #sed -i -e "s|#*\s*localcert\s*=.*|localcert = /osixia/mmc-agent/ssl/$SSL_PEM_FILENAME|" /etc/mmc/agent/config.ini
+      #sed -i -e "s|#*\s*cacert\s*=.*|cacert = /osixia/mmc-agent/ssl/$SSL_CA_CRT_FILENAME|" /etc/mmc/agent/config.ini
+
+      sed -i -e "s|#*\s*localcert\s*=.*|localcert = /osixia/mmc-agent/ssl/$SSL_KEY_FILENAME|" /etc/mmc/agent/config.ini
+      sed -i -e "s|#*\s*cacert\s*=.*|cacert = /osixia/mmc-agent/ssl/$SSL_CRT_FILENAME|" /etc/mmc/agent/config.ini
+
+      chown mmc:mmc -R /osixia/mmc-agent/ssl
 
     fi
 
