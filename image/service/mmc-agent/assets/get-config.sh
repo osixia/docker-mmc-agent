@@ -28,18 +28,8 @@ plugin_config_value() {
   local key=${!info_key_value[0]}
   local value=${!info_key_value[1]}
 
-  local v;
-  # the value contain a not empty variable
-  if [ -n "${!value}" ]; then
-    local v=${!value}
-
-  # it's just a not empty value
-  elif [ -n "$value" ]; then
-    local v=$value
-  fi
-
   if [ "$key" == "$config_to_search" ]; then
-    echo "$v"
+    echo "$value"
   fi
 
 }

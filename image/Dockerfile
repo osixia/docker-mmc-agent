@@ -12,13 +12,12 @@ RUN echo "deb http://mds.mandriva.org/pub/mds/debian wheezy main" > /etc/apt/sou
 ADD services-available /etc/services-available/
 
 # Install mmc-agent
-RUN apt-get -y update && /sbin/enable-service ssl-kit \
-    && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes --no-install-recommends \
+RUN apt-get -y update && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes --no-install-recommends \
     libnss-ldap \
     mmc-agent \
     python-mmc-base \
     python-mmc-dashboard \
-    && /sbin/enable-service mmc-mail mmc-ppolicy mmc-sshlpk
+    && /sbin/enable-service ssl-kit mmc-mail mmc-ppolicy mmc-sshlpk
 
 # Add install script and mmc-agent assets
 ADD service/install.sh /tmp/install.sh

@@ -17,7 +17,7 @@ if [ ! -e "$FIRST_START_DONE" ]; then
   	CONFIG_PPOLICY_DN="ou=Password Policies,$LDAP_BASE_DN"
   fi
 
-  if [ -z "CONFIG_PPOLICY_DEFAULT" ]; then
+  if [ -z "$CONFIG_PPOLICY_DEFAULT" ]; then
   	CONFIG_PPOLICY_DEFAULT="cn=default"
   fi
 
