@@ -2,6 +2,8 @@
 
 FIRST_START_DONE="/etc/docker-mmc-agent-first-start-done"
 
+echo "172.17.0.13 ldap.example.org" >> /etc/hosts
+
 # container first start
 if [ ! -e "$FIRST_START_DONE" ]; then
 
