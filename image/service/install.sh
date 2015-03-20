@@ -9,5 +9,5 @@ sed -i -e "s/#*\s*host\s*=.*/host = 0.0.0.0/" /etc/mmc/agent/config.ini
 #sed -i -e "s/#*\s*group\s*=.*/group = mmc/" /etc/mmc/agent/config.ini
 #sed -i -e "s/#*\s*umask\s*=.*/umask = 0007/" /etc/mmc/agent/config.ini
 
-#mkdir -p /home/archives /var/log/mmc/
+mkdir -p /home/archives /var/log/mmc/
 #chown mmc:mmc -R /home/archives /var/log/mmc/
