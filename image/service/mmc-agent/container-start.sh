@@ -5,14 +5,6 @@ FIRST_START_DONE="/etc/docker-mmc-agent-first-start-done"
 # container first start
 if [ ! -e "$FIRST_START_DONE" ]; then
 
-  # mmc-agent login informations
-  sed -i -e "s|#*\s*login\s*=.*|login = $MMC_AGENT_LOGIN|" /etc/mmc/agent/config.ini
-
-  # all the passwords contained in MMC-related configuration files can be obfuscated using a base64 encoding.
-  # this is not a security feature, but at least somebody won’t be able to read accidentally a password.
-  PWD_BASE64=$(python -c 'print "'$MMC_AGENT_PASSWORD'".encode("base64")')
-  sed -i -e "s|#*\s*password\s*=.*|password = {base64}$PWD_BASE64|" /etc/mmc/agent/config.ini
-
   # SSL config
   if [ "${USE_SSL,,}" == "true" ]; then
 
@@ -45,6 +37,9 @@ if [ ! -e "$FIRST_START_DONE" ]; then
     # disable ssl
     sed -i -e "s|#*\s*enablessl\s*=.*|enablessl = 0|" /etc/mmc/agent/config.ini
   fi
+
+  # mmc agent config
+  /osixia/mmc-agent/config-plugin.sh "$MMC_AGENT_CONFIG" /etc/mmc/agent/config.ini
 
   # base plugin configuration
   /osixia/mmc-agent/config-plugin.sh "$MMC_BASE_PLUGIN" /etc/mmc/plugins/base.ini
