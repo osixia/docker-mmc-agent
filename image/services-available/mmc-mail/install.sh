@@ -9,4 +9,3 @@ sed -i -e "s/#*\s*vAliasesSupport\s*=.*/vAliasesSupport = 1/" /etc/mmc/plugins/m
 
 echo "[userdefault]" >> /etc/mmc/plugins/mail.ini
 echo "mailbox = /home/vmail/%uid%/" >> /etc/mmc/plugins/mail.ini
-echo "mailuserquota = 204800" >> /etc/mmc/plugins/mail.ini >> /etc/mmc/plugins/mail.ini
