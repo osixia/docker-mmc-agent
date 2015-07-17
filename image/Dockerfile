@@ -1,15 +1,16 @@
-FROM osixia/baseimage:0.10.4
+FROM osixia/light-baseimage:0.1.0
 MAINTAINER Bertrand Gouny <bertrand.gouny@osixia.net>
 
 # Use baseimage-docker's init system.
-CMD ["/sbin/my_init"]
+CMD ["/osixia/tool/run"]
 
+# Add mmc user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mmc && useradd -r -g mmc mmc
 
 # Add MDS repository
-RUN echo "deb http://mds.mandriva.org/pub/mds/debian wheezy main" > /etc/apt/sources.list.d/mds.list
+RUN echo "deb http://repo.pulse2.fr/pub/pulse2/server/debian wheezy 3.0" > /etc/apt/sources.list.d/mds.list
 
-ADD services-available /etc/services-available/
+ADD service-available /osixia/service-available/
 
 # Install mmc-agent
 RUN apt-get -y update && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes --no-install-recommends \
@@ -17,22 +18,16 @@ RUN apt-get -y update && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install
     mmc-agent \
     python-mmc-base \
     python-mmc-dashboard \
-    && /sbin/enable-service ssl-kit mmc-mail mmc-ppolicy mmc-sshlpk
+    && /sbin/install-service-available ssl-helper-openssl mmc-mail mmc-ppolicy mmc-sshlpk
 
-# Add install script and mmc-agent assets
-ADD service/install.sh /tmp/install.sh
-ADD service/mmc-agent/assets /osixia/mmc-agent
+# Add service directory to /osixia/service
+ADD service /osixia/service
 
-# Run install script and clean all
-RUN ./tmp/install.sh \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Use baseimage install-service script and clean all
+RUN ./sbin/install-service && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Add default env variables
-ADD env.yml /etc/env.yml
-
-# Add mmc-agent container start config & daemon
-ADD service/mmc-agent/container-start.sh /etc/my_init.d/mmc-agent
-ADD service/mmc-agent/daemon.sh /etc/service/mmc-agent/run
+ADD env.yaml /etc/env.yaml
 
 # Expose mmc-agent default port
 EXPOSE 7080
