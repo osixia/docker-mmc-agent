@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
-LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes --no-install-recommends python-mmc-ppolicy
+dpkg -i /osixia/service-available/mmc-ppolicy/package/python-mmc-ppolicy_3.1.1-3_all.deb
+rm -rf /osixia/service-available/mmc-ppolicy/package/
 
 # change default plugin configuration
 sed -i -e "s/#*\s*disable\s*=.*/disable = 0/" /etc/mmc/plugins/ppolicy.ini
