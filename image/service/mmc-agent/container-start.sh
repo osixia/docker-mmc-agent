@@ -2,8 +2,6 @@
 
 FIRST_START_DONE="/etc/docker-mmc-agent-first-start-done"
 
-echo "172.17.0.65 ldap.example.org" >> /etc/hosts
-
 # container first start
 if [ ! -e "$FIRST_START_DONE" ]; then
 
@@ -35,7 +33,7 @@ if [ ! -e "$FIRST_START_DONE" ]; then
 
       sed -i -e "s|#*\s*localcert\s*=.*|localcert = /osixia/service/mmc-agent/assets/ssl/$SSL_KEY_FILENAME|" /etc/mmc/agent/config.ini
       sed -i -e "s|#*\s*cacert\s*=.*|cacert = /osixia/service/mmc-agent/assets/ssl/$SSL_CRT_FILENAME|" /etc/mmc/agent/config.ini
-      
+
     fi
 
     chown mmc:mmc -R /osixia/service/mmc-agent/assets/ssl
