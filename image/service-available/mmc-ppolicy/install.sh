@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-dpkg -i /osixia/service-available/mmc-ppolicy/package/python-mmc-ppolicy_3.1.1-3_all.deb
-rm -rf /osixia/service-available/mmc-ppolicy/package/
+dpkg -i /osixia/service-available/mmc-ppolicy/assets/package/python-mmc-ppolicy_3.1.1-3_all.deb
+rm -rf /osixia/service-available/mmc-ppolicy/assets/package/
 
 # change default plugin configuration
 sed -i -e "s/#*\s*disable\s*=.*/disable = 0/" /etc/mmc/plugins/ppolicy.ini

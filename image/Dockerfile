@@ -25,7 +25,7 @@ ADD service-available /osixia/service-available/
 ADD service /osixia/service
 
 RUN /sbin/install-service \
-    && /sbin/install-service-available ssl-helper-openssl mmc-mail mmc-ppolicy mmc-sshlpk \
+    && /sbin/install-service-available ssl-helper-gnutls ssl-helper-openssl mmc-mail mmc-ppolicy mmc-sshlpk \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Add default env variables
