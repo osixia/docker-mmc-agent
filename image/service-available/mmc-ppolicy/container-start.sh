@@ -22,13 +22,13 @@ if [ ! -e "$FIRST_START_DONE" ]; then
   fi
 
   # adapt overlay config
-  sed -i -e "s|olcPPolicyDefault:.*|olcPPolicyDefault: $CONFIG_PPOLICY_DEFAULT,$CONFIG_PPOLICY_DN|" /osixia/service-available/mmc-ppolicy/assets/config/ppolicy_overlay.ldif
+  sed -i -e "s|olcPPolicyDefault:.*|olcPPolicyDefault: $CONFIG_PPOLICY_DEFAULT,$CONFIG_PPOLICY_DN|" /osixia/service/mmc-ppolicy/assets/config/ppolicy_overlay.ldif
 
   # load ppolicy module
-  ldapadd -x -H $LDAP_URL -D $LDAP_ADMIN_DN -w $LDAP_ADMIN_PASSWORD -f /osixia/service-available/mmc-ppolicy/assets/config/ppolicy_moduleload.ldif || true
+  ldapadd -x -H $LDAP_URL -D $LDAP_ADMIN_DN -w $LDAP_ADMIN_PASSWORD -f /osixia/service/mmc-ppolicy/assets/config/ppolicy_moduleload.ldif || true
 
   # ppolicy overlay
-  ldapadd -x -H $LDAP_URL -D $LDAP_ADMIN_DN -w $LDAP_ADMIN_PASSWORD -f /osixia/service-available/mmc-ppolicy/assets/config/ppolicy_overlay.ldif || true
+  ldapadd -x -H $LDAP_URL -D $LDAP_ADMIN_DN -w $LDAP_ADMIN_PASSWORD -f /osixia/service/mmc-ppolicy/assets/config/ppolicy_overlay.ldif || true
 
   # ppolicy plugin configuration
   /osixia/service/mmc-agent/assets/config-plugin.sh "$MMC_PPOLICY_PLUGIN" /etc/mmc/plugins/ppolicy.ini
