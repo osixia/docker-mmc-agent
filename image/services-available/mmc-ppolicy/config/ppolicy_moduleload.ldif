@@ -1,4 +1,0 @@
-dn: cn=module,cn=config
-changetype: modify
-add: olcModuleLoad
-olcModuleLoad: ppolicy

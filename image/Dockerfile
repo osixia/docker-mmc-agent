@@ -1,38 +1,46 @@
-FROM osixia/baseimage:0.10.4
+FROM osixia/light-baseimage:0.1.0
 MAINTAINER Bertrand Gouny <bertrand.gouny@osixia.net>
 
-# Use baseimage-docker's init system.
-CMD ["/sbin/my_init"]
+# Use baseimage's init system.
+# https://github.com/osixia/docker-light-baseimage/blob/stable/image/tool/run
+CMD ["/container/tool/run"]
 
+# Add mmc user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mmc && useradd -r -g mmc mmc
 
-# Add MDS repository
-RUN echo "deb http://mds.mandriva.org/pub/mds/debian wheezy main" > /etc/apt/sources.list.d/mds.list
-
-ADD services-available /etc/services-available/
-
 # Install mmc-agent
-RUN apt-get -y update && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes --no-install-recommends \
+RUN apt-get -y update \
+    && /container/tool/install-service-available \
+       ssl-helper-gnutls \
+       ssl-helper-openssl \
+    && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes --no-install-recommends \
     libnss-ldap \
-    mmc-agent \
-    python-mmc-base \
-    python-mmc-dashboard \
-    && /sbin/enable-service ssl-kit mmc-mail mmc-ppolicy mmc-sshlpk
+    ldap-utils \
+    python \
+    python-support \
+    python-twisted-web \
+    python-ldap \
+    python-sqlalchemy \
+    python-mysqldb \
+    python-openssl \
+    python-psutil \
+    python-gobject
 
-# Add install script and mmc-agent assets
-ADD service/install.sh /tmp/install.sh
-ADD service/mmc-agent/assets /osixia/mmc-agent
+ADD service-available /container/service-available/
+ADD service /container/service
 
-# Run install script and clean all
-RUN ./tmp/install.sh \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Use baseimage install-service script, image specific service-available and clean all
+# https://github.com/osixia/docker-light-baseimage/blob/stable/image/tool/install-service
+RUN /container/tool/install-service \
+    && /container/tool/install-service-available \
+       mmc-mail \
+       mmc-ppolicy \
+       mmc-sshlpk \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Add default env variables
-ADD env.yml /etc/env.yml
-
-# Add mmc-agent container start config & daemon
-ADD service/mmc-agent/container-start.sh /etc/my_init.d/mmc-agent
-ADD service/mmc-agent/daemon.sh /etc/service/mmc-agent/run
+ADD env.yaml /etc/env.yaml
 
 # Expose mmc-agent default port
 EXPOSE 7080
