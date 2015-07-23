@@ -1,14 +1,19 @@
 FROM osixia/light-baseimage:0.1.0
 MAINTAINER Bertrand Gouny <bertrand.gouny@osixia.net>
 
-# Use baseimage-docker's init system.
-CMD ["/osixia/tool/run"]
+# Use baseimage's init system.
+# https://github.com/osixia/docker-light-baseimage/blob/stable/image/tool/run
+CMD ["/container/tool/run"]
 
 # Add mmc user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r mmc && useradd -r -g mmc mmc
 
 # Install mmc-agent
-RUN apt-get -y update && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes --no-install-recommends \
+RUN apt-get -y update \
+    && /container/tool/install-service-available \
+       ssl-helper-gnutls \
+       ssl-helper-openssl \
+    && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes --no-install-recommends \
     libnss-ldap \
     ldap-utils \
     python \
@@ -21,12 +26,18 @@ RUN apt-get -y update && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install
     python-psutil \
     python-gobject
 
-ADD service-available /osixia/service-available/
-ADD service /osixia/service
+ADD service-available /container/service-available/
+ADD service /container/service
 
-RUN /sbin/install-service \
-    && /sbin/install-service-available ssl-helper-gnutls ssl-helper-openssl mmc-mail mmc-ppolicy mmc-sshlpk \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Use baseimage install-service script, image specific service-available and clean all
+# https://github.com/osixia/docker-light-baseimage/blob/stable/image/tool/install-service
+RUN /container/tool/install-service \
+    && /container/tool/install-service-available \
+       mmc-mail \
+       mmc-ppolicy \
+       mmc-sshlpk \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Add default env variables
 ADD env.yaml /etc/env.yaml

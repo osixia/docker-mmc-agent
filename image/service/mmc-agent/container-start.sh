@@ -12,7 +12,7 @@ if [ ! -e "$FIRST_START_DONE" ]; then
     sed -i -e "s|#*\s*enablessl\s*=.*|enablessl = 1|" /etc/mmc/agent/config.ini
 
     # check certificat and key or create it
-    /sbin/ssl-helper "/osixia/service/mmc-agent/assets/ssl/$SSL_CRT_FILENAME" "/osixia/service/mmc-agent/assets/ssl/$SSL_KEY_FILENAME" --ca-crt=/osixia/service/mmc-agent/assets/ssl/$SSL_CA_CRT_FILENAME
+    /sbin/ssl-helper "/container/service/mmc-agent/assets/ssl/$SSL_CRT_FILENAME" "/container/service/mmc-agent/assets/ssl/$SSL_KEY_FILENAME" --ca-crt=/container/service/mmc-agent/assets/ssl/$SSL_CA_CRT_FILENAME
 
     # verify peer ?
     if [ "${SSL_VERIFY_PEER,,}" == "true" ]; then
@@ -21,22 +21,22 @@ if [ ! -e "$FIRST_START_DONE" ]; then
       sed -i -e "s|#*\s*verifypeer\s*=.*|verifypeer = 1|" /etc/mmc/agent/config.ini
 
       # mmc agent need a pem file with the crt and the key
-      cat /osixia/service/mmc-agent/assets/ssl/$SSL_CRT_FILENAME /osixia/service/mmc-agent/assets/ssl/$SSL_KEY_FILENAME > /osixia/service/mmc-agent/assets/ssl/mmc.pem
+      cat /container/service/mmc-agent/assets/ssl/$SSL_CRT_FILENAME /container/service/mmc-agent/assets/ssl/$SSL_KEY_FILENAME > /container/service/mmc-agent/assets/ssl/mmc.pem
 
-      sed -i -e "s|#*\s*localcert\s*=.*|localcert = /osixia/service/mmc-agent/assets/ssl/mmc.pem|" /etc/mmc/agent/config.ini
-      sed -i -e "s|#*\s*cacert\s*=.*|cacert = /osixia/service/mmc-agent/assets/ssl/$SSL_CA_CRT_FILENAME|" /etc/mmc/agent/config.ini
+      sed -i -e "s|#*\s*localcert\s*=.*|localcert = /container/service/mmc-agent/assets/ssl/mmc.pem|" /etc/mmc/agent/config.ini
+      sed -i -e "s|#*\s*cacert\s*=.*|cacert = /container/service/mmc-agent/assets/ssl/$SSL_CA_CRT_FILENAME|" /etc/mmc/agent/config.ini
 
     else
 
       echo "Don't verify peer"
       sed -i -e "s|#*\s*verifypeer\s*=.*|verifypeer = 0|" /etc/mmc/agent/config.ini
 
-      sed -i -e "s|#*\s*localcert\s*=.*|localcert = /osixia/service/mmc-agent/assets/ssl/$SSL_KEY_FILENAME|" /etc/mmc/agent/config.ini
-      sed -i -e "s|#*\s*cacert\s*=.*|cacert = /osixia/service/mmc-agent/assets/ssl/$SSL_CRT_FILENAME|" /etc/mmc/agent/config.ini
+      sed -i -e "s|#*\s*localcert\s*=.*|localcert = /container/service/mmc-agent/assets/ssl/$SSL_KEY_FILENAME|" /etc/mmc/agent/config.ini
+      sed -i -e "s|#*\s*cacert\s*=.*|cacert = /container/service/mmc-agent/assets/ssl/$SSL_CRT_FILENAME|" /etc/mmc/agent/config.ini
 
     fi
 
-    chown mmc:mmc -R /osixia/service/mmc-agent/assets/ssl
+    chown mmc:mmc -R /container/service/mmc-agent/assets/ssl
 
   else
     # disable ssl
@@ -44,10 +44,10 @@ if [ ! -e "$FIRST_START_DONE" ]; then
   fi
 
   # Ldap tls config
-  LDAP_VERIFY_PEER=$(/osixia/service/mmc-agent/assets/get-config.sh "$MMC_BASE_PLUGIN" "ldap ldapverifypeer")
-  LDAP_CA_CERT=$(/osixia/service/mmc-agent/assets/get-config.sh "$MMC_BASE_PLUGIN" "ldap cacert")
-  LDAP_CLIENT_CERT=$(/osixia/service/mmc-agent/assets/get-config.sh "$MMC_BASE_PLUGIN" "ldap localcert")
-  LDAP_CLIENT_KEY=$(/osixia/service/mmc-agent/assets/get-config.sh "$MMC_BASE_PLUGIN" "ldap localkey")
+  LDAP_VERIFY_PEER=$(/container/service/mmc-agent/assets/get-config.sh "$MMC_BASE_PLUGIN" "ldap ldapverifypeer")
+  LDAP_CA_CERT=$(/container/service/mmc-agent/assets/get-config.sh "$MMC_BASE_PLUGIN" "ldap cacert")
+  LDAP_CLIENT_CERT=$(/container/service/mmc-agent/assets/get-config.sh "$MMC_BASE_PLUGIN" "ldap localcert")
+  LDAP_CLIENT_KEY=$(/container/service/mmc-agent/assets/get-config.sh "$MMC_BASE_PLUGIN" "ldap localkey")
 
   if [ ! -z "$LDAP_CA_CERT" ] && [ ! -z "$LDAP_CLIENT_CERT" ] && [ ! -z "$LDAP_CLIENT_KEY" ]; then
     # check certificat and key or create it
@@ -67,10 +67,10 @@ if [ ! -e "$FIRST_START_DONE" ]; then
   fi
 
   # mmc agent config
-  /osixia/service/mmc-agent/assets/config-plugin.sh "$MMC_AGENT_CONFIG" /etc/mmc/agent/config.ini
+  /container/service/mmc-agent/assets/config-plugin.sh "$MMC_AGENT_CONFIG" /etc/mmc/agent/config.ini
 
   # base plugin configuration
-  /osixia/service/mmc-agent/assets/config-plugin.sh "$MMC_BASE_PLUGIN" /etc/mmc/plugins/base.ini
+  /container/service/mmc-agent/assets/config-plugin.sh "$MMC_BASE_PLUGIN" /etc/mmc/plugins/base.ini
 
   touch $FIRST_START_DONE
 fi

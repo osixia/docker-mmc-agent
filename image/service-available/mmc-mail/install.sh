@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-dpkg -i /osixia/service-available/mmc-mail/assets/package/python-mmc-mail_2.5.1-1_all.deb
-rm -rf /osixia/service-available/mmc-mail/assets/package/
+dpkg -i /container/service-available/mmc-mail/assets/package/python-mmc-mail_2.5.1-1_all.deb
+rm -rf /container/service-available/mmc-mail/assets/package/
 
 # change default plugin configuration
 sed -i -e "s/#*\s*disable\s*=.*/disable = 0/" /etc/mmc/plugins/mail.ini

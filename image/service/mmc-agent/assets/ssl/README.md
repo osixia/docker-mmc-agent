@@ -1,2 +1,2 @@
 Add your ssl crt, key and ca crt here
-or during docker run mount a data volume with thoses files to /osixia/service/mmc-agent/assets/ssl
+or during docker run mount a data volume with thoses files to /container/service/mmc-agent/assets/ssl
