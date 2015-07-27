@@ -6,37 +6,37 @@ FIRST_START_DONE="/etc/docker-mmc-agent-first-start-done"
 if [ ! -e "$FIRST_START_DONE" ]; then
 
   # SSL config
-  if [ "${USE_SSL,,}" == "true" ]; then
+  if [ "${HTTPS,,}" == "true" ]; then
 
     echo "Use ssl"
     sed -i -e "s|#*\s*enablessl\s*=.*|enablessl = 1|" /etc/mmc/agent/config.ini
 
     # check certificat and key or create it
-    /sbin/ssl-helper "/container/service/mmc-agent/assets/ssl/$SSL_CRT_FILENAME" "/container/service/mmc-agent/assets/ssl/$SSL_KEY_FILENAME" --ca-crt=/container/service/mmc-agent/assets/ssl/$SSL_CA_CRT_FILENAME
+    /sbin/ssl-helper "/container/service/mmc-agent/assets/certs/$HTTPS_CRT_FILENAME" "/container/service/mmc-agent/assets/certs/$HTTPS_KEY_FILENAME" --ca-crt=/container/service/mmc-agent/assets/certs/$HTTPS_CA_CRT_FILENAME
 
     # verify peer ?
-    if [ "${SSL_VERIFY_PEER,,}" == "true" ]; then
+    if [ "${HTTPS_VERIFY_PEER,,}" == "true" ]; then
 
       echo "Verify peer"
       sed -i -e "s|#*\s*verifypeer\s*=.*|verifypeer = 1|" /etc/mmc/agent/config.ini
 
       # mmc agent need a pem file with the crt and the key
-      cat /container/service/mmc-agent/assets/ssl/$SSL_CRT_FILENAME /container/service/mmc-agent/assets/ssl/$SSL_KEY_FILENAME > /container/service/mmc-agent/assets/ssl/mmc.pem
+      cat /container/service/mmc-agent/assets/certs/$HTTPS_CRT_FILENAME /container/service/mmc-agent/assets/certs/$HTTPS_KEY_FILENAME > /container/service/mmc-agent/assets/certs/mmc.pem
 
-      sed -i -e "s|#*\s*localcert\s*=.*|localcert = /container/service/mmc-agent/assets/ssl/mmc.pem|" /etc/mmc/agent/config.ini
-      sed -i -e "s|#*\s*cacert\s*=.*|cacert = /container/service/mmc-agent/assets/ssl/$SSL_CA_CRT_FILENAME|" /etc/mmc/agent/config.ini
+      sed -i -e "s|#*\s*localcert\s*=.*|localcert = /container/service/mmc-agent/assets/certs/mmc.pem|" /etc/mmc/agent/config.ini
+      sed -i -e "s|#*\s*cacert\s*=.*|cacert = /container/service/mmc-agent/assets/certs/$HTTPS_CA_CRT_FILENAME|" /etc/mmc/agent/config.ini
 
     else
 
       echo "Don't verify peer"
       sed -i -e "s|#*\s*verifypeer\s*=.*|verifypeer = 0|" /etc/mmc/agent/config.ini
 
-      sed -i -e "s|#*\s*localcert\s*=.*|localcert = /container/service/mmc-agent/assets/ssl/$SSL_KEY_FILENAME|" /etc/mmc/agent/config.ini
-      sed -i -e "s|#*\s*cacert\s*=.*|cacert = /container/service/mmc-agent/assets/ssl/$SSL_CRT_FILENAME|" /etc/mmc/agent/config.ini
+      sed -i -e "s|#*\s*localcert\s*=.*|localcert = /container/service/mmc-agent/assets/certs/$HTTPS_KEY_FILENAME|" /etc/mmc/agent/config.ini
+      sed -i -e "s|#*\s*cacert\s*=.*|cacert = /container/service/mmc-agent/assets/certs/$HTTPS_CRT_FILENAME|" /etc/mmc/agent/config.ini
 
     fi
 
-    chown mmc:mmc -R /container/service/mmc-agent/assets/ssl
+    chown mmc:mmc -R /container/service/mmc-agent/assets/certs
 
   else
     # disable ssl
