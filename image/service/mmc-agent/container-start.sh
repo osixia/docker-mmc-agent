@@ -6,33 +6,33 @@ FIRST_START_DONE="/etc/docker-mmc-agent-first-start-done"
 if [ ! -e "$FIRST_START_DONE" ]; then
 
   # SSL config
-  if [ "${HTTPS,,}" == "true" ]; then
+  if [ "${MMC_AGENT_HTTPS,,}" == "true" ]; then
 
     echo "Use ssl"
     sed -i -e "s|#*\s*enablessl\s*=.*|enablessl = 1|" /etc/mmc/agent/config.ini
 
     # check certificat and key or create it
-    /sbin/ssl-helper "/container/service/mmc-agent/assets/certs/$HTTPS_CRT_FILENAME" "/container/service/mmc-agent/assets/certs/$HTTPS_KEY_FILENAME" --ca-crt=/container/service/mmc-agent/assets/certs/$HTTPS_CA_CRT_FILENAME
+    /sbin/ssl-helper "/container/service/mmc-agent/assets/certs/$MMC_AGENT_HTTPS_CRT_FILENAME" "/container/service/mmc-agent/assets/certs/$MMC_AGENT_HTTPS_KEY_FILENAME" --ca-crt=/container/service/mmc-agent/assets/certs/$MMC_AGENT_HTTPS_CA_CRT_FILENAME
 
     # verify peer ?
-    if [ "${HTTPS_VERIFY_PEER,,}" == "true" ]; then
+    if [ "${MMC_AGENT_HTTPS_VERIFY_PEER,,}" == "true" ]; then
 
       echo "Verify peer"
       sed -i -e "s|#*\s*verifypeer\s*=.*|verifypeer = 1|" /etc/mmc/agent/config.ini
 
       # mmc agent need a pem file with the crt and the key
-      cat /container/service/mmc-agent/assets/certs/$HTTPS_CRT_FILENAME /container/service/mmc-agent/assets/certs/$HTTPS_KEY_FILENAME > /container/service/mmc-agent/assets/certs/mmc.pem
+      cat /container/service/mmc-agent/assets/certs/$MMC_AGENT_HTTPS_CRT_FILENAME /container/service/mmc-agent/assets/certs/$MMC_AGENT_HTTPS_KEY_FILENAME > /container/service/mmc-agent/assets/certs/mmc.pem
 
       sed -i -e "s|#*\s*localcert\s*=.*|localcert = /container/service/mmc-agent/assets/certs/mmc.pem|" /etc/mmc/agent/config.ini
-      sed -i -e "s|#*\s*cacert\s*=.*|cacert = /container/service/mmc-agent/assets/certs/$HTTPS_CA_CRT_FILENAME|" /etc/mmc/agent/config.ini
+      sed -i -e "s|#*\s*cacert\s*=.*|cacert = /container/service/mmc-agent/assets/certs/$MMC_AGENT_HTTPS_CA_CRT_FILENAME|" /etc/mmc/agent/config.ini
 
     else
 
       echo "Don't verify peer"
       sed -i -e "s|#*\s*verifypeer\s*=.*|verifypeer = 0|" /etc/mmc/agent/config.ini
 
-      sed -i -e "s|#*\s*localcert\s*=.*|localcert = /container/service/mmc-agent/assets/certs/$HTTPS_KEY_FILENAME|" /etc/mmc/agent/config.ini
-      sed -i -e "s|#*\s*cacert\s*=.*|cacert = /container/service/mmc-agent/assets/certs/$HTTPS_CRT_FILENAME|" /etc/mmc/agent/config.ini
+      sed -i -e "s|#*\s*localcert\s*=.*|localcert = /container/service/mmc-agent/assets/certs/$MMC_AGENT_HTTPS_KEY_FILENAME|" /etc/mmc/agent/config.ini
+      sed -i -e "s|#*\s*cacert\s*=.*|cacert = /container/service/mmc-agent/assets/certs/$MMC_AGENT_HTTPS_CRT_FILENAME|" /etc/mmc/agent/config.ini
 
     fi
 
@@ -44,10 +44,10 @@ if [ ! -e "$FIRST_START_DONE" ]; then
   fi
 
   # Ldap tls config
-  LDAP_VERIFY_PEER=$(/container/service/mmc-agent/assets/get-config.sh "$MMC_BASE_PLUGIN" "ldap ldapverifypeer")
-  LDAP_CA_CERT=$(/container/service/mmc-agent/assets/get-config.sh "$MMC_BASE_PLUGIN" "ldap cacert")
-  LDAP_CLIENT_CERT=$(/container/service/mmc-agent/assets/get-config.sh "$MMC_BASE_PLUGIN" "ldap localcert")
-  LDAP_CLIENT_KEY=$(/container/service/mmc-agent/assets/get-config.sh "$MMC_BASE_PLUGIN" "ldap localkey")
+  LDAP_VERIFY_PEER=$(/container/service/mmc-agent/assets/get-config.sh "$MMC_AGENT_BASE_PLUGIN_CONFIG" "ldap ldapverifypeer")
+  LDAP_CA_CERT=$(/container/service/mmc-agent/assets/get-config.sh "$MMC_AGENT_BASE_PLUGIN_CONFIG" "ldap cacert")
+  LDAP_CLIENT_CERT=$(/container/service/mmc-agent/assets/get-config.sh "$MMC_AGENT_BASE_PLUGIN_CONFIG" "ldap localcert")
+  LDAP_CLIENT_KEY=$(/container/service/mmc-agent/assets/get-config.sh "$MMC_AGENT_BASE_PLUGIN_CONFIG" "ldap localkey")
 
   if [ ! -z "$LDAP_CA_CERT" ] && [ ! -z "$LDAP_CLIENT_CERT" ] && [ ! -z "$LDAP_CLIENT_KEY" ]; then
     # check certificat and key or create it
@@ -70,7 +70,7 @@ if [ ! -e "$FIRST_START_DONE" ]; then
   /container/service/mmc-agent/assets/config-plugin.sh "$MMC_AGENT_CONFIG" /etc/mmc/agent/config.ini
 
   # base plugin configuration
-  /container/service/mmc-agent/assets/config-plugin.sh "$MMC_BASE_PLUGIN" /etc/mmc/plugins/base.ini
+  /container/service/mmc-agent/assets/config-plugin.sh "$MMC_AGENT_BASE_PLUGIN_CONFIG" /etc/mmc/plugins/base.ini
 
   touch $FIRST_START_DONE
 fi
