@@ -60,10 +60,12 @@ if [ ! -e "$FIRST_START_DONE" ]; then
       echo "TLS_REQCERT $LDAP_VERIFY_PEER" >> /etc/ldap/ldap.conf
     fi
 
-    [[ -f "$HOME/.ldaprc" ]] && rm -f $HOME/.ldaprc
-    touch $HOME/.ldaprc
-    echo "TLS_CERT ${LDAP_CLIENT_CERT}" >> $HOME/.ldaprc
-    echo "TLS_KEY ${LDAP_CLIENT_KEY}" >> $HOME/.ldaprc
+    [[ -f "~/.ldaprc" ]] && rm -f ~/.ldaprc
+    touch ~/.ldaprc
+
+    echo "TLS_CERT ${LDAP_CLIENT_CERT}" >> ~/.ldaprc
+    echo "TLS_KEY ${LDAP_CLIENT_KEY}" >> ~/.ldaprc
+
   fi
 
   # mmc agent config
