@@ -43,7 +43,7 @@ if [ ! -e "$FIRST_START_DONE" ]; then
     sed -i -e "s|#*\s*enablessl\s*=.*|enablessl = 0|" /etc/mmc/agent/config.ini
   fi
 
-  # Ldap tls config
+  # ldap tls config
   LDAP_VERIFY_PEER=$(/container/service/mmc-agent/assets/get-config.sh "$MMC_AGENT_BASE_PLUGIN_CONFIG" "ldap ldapverifypeer")
   LDAP_CA_CERT=$(/container/service/mmc-agent/assets/get-config.sh "$MMC_AGENT_BASE_PLUGIN_CONFIG" "ldap cacert")
   LDAP_CLIENT_CERT=$(/container/service/mmc-agent/assets/get-config.sh "$MMC_AGENT_BASE_PLUGIN_CONFIG" "ldap localcert")
@@ -60,11 +60,11 @@ if [ ! -e "$FIRST_START_DONE" ]; then
       echo "TLS_REQCERT $LDAP_VERIFY_PEER" >> /etc/ldap/ldap.conf
     fi
 
-    [[ -f "~/.ldaprc" ]] && rm -f ~/.ldaprc
-    touch ~/.ldaprc
+    [[ -f "$HOME/.ldaprc" ]] && rm -f $HOME/.ldaprc
+    touch $HOME/.ldaprc
 
-    echo "TLS_CERT ${LDAP_CLIENT_CERT}" >> ~/.ldaprc
-    echo "TLS_KEY ${LDAP_CLIENT_KEY}" >> ~/.ldaprc
+    echo "TLS_CERT ${LDAP_CLIENT_CERT}" >> $HOME/.ldaprc
+    echo "TLS_KEY ${LDAP_CLIENT_KEY}" >> $HOME/.ldaprc
 
   fi
 
