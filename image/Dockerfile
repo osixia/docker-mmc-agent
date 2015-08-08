@@ -5,9 +5,6 @@ MAINTAINER Bertrand Gouny <bertrand.gouny@osixia.net>
 # https://github.com/osixia/docker-light-baseimage/blob/stable/image/tool/run
 CMD ["/container/tool/run"]
 
-# Add mmc user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
-RUN groupadd -r mmc && useradd -r -g mmc mmc
-
 # Install mmc-agent
 RUN apt-get -y update \
     && /container/tool/install-service-available \

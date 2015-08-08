@@ -36,8 +36,6 @@ if [ ! -e "$FIRST_START_DONE" ]; then
 
     fi
 
-    chown mmc:mmc -R /container/service/mmc-agent/assets/certs
-
   else
     # disable ssl
     sed -i -e "s|#*\s*enablessl\s*=.*|enablessl = 0|" /etc/mmc/agent/config.ini
