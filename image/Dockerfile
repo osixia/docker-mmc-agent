@@ -1,12 +1,9 @@
-FROM osixia/light-baseimage:0.1.0
+FROM osixia/light-baseimage:0.1.2
 MAINTAINER Bertrand Gouny <bertrand.gouny@osixia.net>
 
 # Use baseimage's init system.
 # https://github.com/osixia/docker-light-baseimage/blob/stable/image/tool/run
 CMD ["/container/tool/run"]
-
-# Add mmc user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
-RUN groupadd -r mmc && useradd -r -g mmc mmc
 
 # Install mmc-agent
 RUN apt-get -y update \
@@ -40,7 +37,7 @@ RUN /container/tool/install-service \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Add default env variables
-ADD env.yaml /etc/env.yaml
+ADD env.yaml /container/environment/env.yaml
 
 # Expose mmc-agent default port
 EXPOSE 7080
