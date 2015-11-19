@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3
+  - Upgrade baseimage: osixia/light-baseimage:0.1.4
+  - support memberOf for ldap ldap groups
+
 ## 0.1.2
   - Upgrade baseimage: osixia/light-baseimage:0.1.2
   - Rename environment variables
