@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.4
+  - Upgrade baseimage: osixia/light-baseimage:0.1.5
+
 ## 0.1.3
   - Upgrade baseimage: osixia/light-baseimage:0.1.4
   - support memberOf for ldap ldap groups
