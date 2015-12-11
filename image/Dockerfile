@@ -31,7 +31,6 @@ ADD service /container/service
 RUN /container/tool/install-service \
     && /container/tool/install-service-available \
        mmc-mail \
-       mmc-ppolicy \
        mmc-sshlpk \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
