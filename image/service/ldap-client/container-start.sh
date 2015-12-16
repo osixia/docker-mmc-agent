@@ -16,7 +16,7 @@ if [ ! -e "$FIRST_START_DONE" ]; then
     /sbin/ssl-helper "$LDAP_CLIENT_CERT" "$LDAP_CLIENT_KEY" --ca-crt=$LDAP_CA_CERT --gnutls
 
     # ldap client config
-    sed -i "s,TLS_CACERT.*,TLS_CACERT ${LDAP_CA_CERT},g" /etc/ldap/ldap.conf
+    sed -i --follow-symlinks "s,TLS_CACERT.*,TLS_CACERT ${LDAP_CA_CERT},g" /etc/ldap/ldap.conf
 
     if [ ! -z "$LDAP_VERIFY_PEER" ]; then
       echo "TLS_REQCERT $LDAP_VERIFY_PEER" >> /etc/ldap/ldap.conf
