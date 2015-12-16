@@ -37,13 +37,13 @@ plugin_config_value() {
   fi
 
   # delete key in the section
-  sed -i '/\['$sect'\]/,/\[/{/\['$sect'\]/n;/\[/!{/#*\s*'$key'\s*=.*/d}}' $CONFIG_FILE
+  sed -i --follow-symlinks '/\['$sect'\]/,/\[/{/\['$sect'\]/n;/\[/!{/#*\s*'$key'\s*=.*/d}}' $CONFIG_FILE
 
   # append new key value in section
-  sed -i '/\['$sect'\]/a '$key' = '$value $CONFIG_FILE
+  sed -i --follow-symlinks '/\['$sect'\]/a '$key' = '$value $CONFIG_FILE
 
   # a bit tricky: uncomment $key and set is value between [section] and [
-  # sed -i '/\['$sect'\]/,/\[/{/\['$sect'\]/n;/\[/!{s|#*\s*'$key'\s*=.*|'$key' = '$value'|g}}' $CONFIG_FILE
+  # sed -i --follow-symlinks '/\['$sect'\]/,/\[/{/\['$sect'\]/n;/\[/!{s|#*\s*'$key'\s*=.*|'$key' = '$value'|g}}' $CONFIG_FILE
 
 }
 
@@ -56,7 +56,7 @@ do
   # it's a table of infos
   if [ "${#infos[@]}" -gt "1" ]; then
     # uncomment section title if needed
-  	sed -i -e "s|#*\s*\[${!infos[0]}\]\s*|\[${!infos[0]}\]|" $CONFIG_FILE
+  	sed -i --follow-symlinks -e "s|#*\s*\[${!infos[0]}\]\s*|\[${!infos[0]}\]|" $CONFIG_FILE
     plugin_config "${!infos[0]}" "${infos[1]}"
   fi
 

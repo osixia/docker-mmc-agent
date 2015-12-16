@@ -22,7 +22,7 @@ if [ ! -e "$FIRST_START_DONE" ]; then
   fi
 
   # adapt overlay config
-  sed -i -e "s|olcPPolicyDefault:.*|olcPPolicyDefault: $CONFIG_PPOLICY_DEFAULT,$CONFIG_PPOLICY_DN|" /container/service-available/mmc-ppolicy/assets/config/ppolicy_overlay.ldif
+  sed -i --follow-symlinks -e "s|olcPPolicyDefault:.*|olcPPolicyDefault: $CONFIG_PPOLICY_DEFAULT,$CONFIG_PPOLICY_DN|" /container/service-available/mmc-ppolicy/assets/config/ppolicy_overlay.ldif
 
   # load ppolicy module
   ldapadd -x -H $LDAP_URL -D $LDAP_ADMIN_DN -w $LDAP_ADMIN_PASSWORD -f /container/service-available/mmc-ppolicy/assets/config/ppolicy_moduleload.ldif || true

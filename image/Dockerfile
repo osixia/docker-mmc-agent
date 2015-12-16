@@ -1,4 +1,4 @@
-FROM osixia/light-baseimage:0.1.5
+FROM osixia/light-baseimage:0.2.0
 MAINTAINER Bertrand Gouny <bertrand.gouny@osixia.net>
 
 # Use baseimage's init system.
@@ -31,7 +31,6 @@ ADD service /container/service
 RUN /container/tool/install-service \
     && /container/tool/install-service-available \
        mmc-mail \
-       mmc-ppolicy \
        mmc-sshlpk \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
