@@ -13,7 +13,7 @@ if [ ! -e "$FIRST_START_DONE" ]; then
 
   if [ ! -z "$LDAP_CA_CERT" ] && [ ! -z "$LDAP_CLIENT_CERT" ] && [ ! -z "$LDAP_CLIENT_KEY" ]; then
     # check certificat and key or create it
-    /sbin/ssl-helper "$LDAP_CLIENT_CERT" "$LDAP_CLIENT_KEY" --ca-crt=$LDAP_CA_CERT --gnutls
+    cfssl-helper ldap "$LDAP_CLIENT_CERT" "$LDAP_CLIENT_KEY" "$LDAP_CA_CERT"
 
     # ldap client config
     sed -i --follow-symlinks "s,TLS_CACERT.*,TLS_CACERT ${LDAP_CA_CERT},g" /etc/ldap/ldap.conf

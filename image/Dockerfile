@@ -1,4 +1,4 @@
-FROM osixia/light-baseimage:0.2.0
+FROM osixia/light-baseimage:0.2.1-dev
 MAINTAINER Bertrand Gouny <bertrand.gouny@osixia.net>
 
 # Use baseimage's init system.
@@ -7,9 +7,7 @@ CMD ["/container/tool/run"]
 
 # Install mmc-agent
 RUN apt-get -y update \
-    && /container/tool/install-service-available \
-       ssl-helper-gnutls \
-       ssl-helper-openssl \
+    && /container/tool/install-service-available cfssl \
     && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes --no-install-recommends \
     libnss-ldap \
     ldap-utils \
