@@ -9,6 +9,6 @@ dpkg -i /container/service/mmc-agent/assets/package/mmc-agent_3.1.1-3_all.deb
 rm -rf /container/service/mmc-agent/assets/package
 
 # mmc-agent config
-sed -i --follow-symlinks -e "s/#*\s*host\s*=.*/host = 0.0.0.0/" /etc/mmc/agent/config.ini
+sed -i -e "s/#*\s*host\s*=.*/host = 0.0.0.0/" /etc/mmc/agent/config.ini
 
 mkdir -p /home/archives /var/log/mmc/

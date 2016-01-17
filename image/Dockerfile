@@ -1,9 +1,5 @@
-FROM osixia/light-baseimage:0.2.1-dev
+FROM osixia/light-baseimage:0.2.1
 MAINTAINER Bertrand Gouny <bertrand.gouny@osixia.net>
-
-# Use baseimage's init system.
-# https://github.com/osixia/docker-light-baseimage/blob/stable/image/tool/run
-CMD ["/container/tool/run"]
 
 # Install mmc-agent
 RUN apt-get -y update \
