@@ -6,7 +6,6 @@ log-helper level eq trace && set -x
 
 
 FIRST_START_DONE="${CONTAINER_STATE_DIR}/docker-mmc-agent-ppolicy-first-start-done"
-
 # container first start
 if [ ! -e "$FIRST_START_DONE" ]; then
 
@@ -37,8 +36,11 @@ if [ ! -e "$FIRST_START_DONE" ]; then
 
   # ppolicy plugin configuration
   ${CONTAINER_SERVICE_DIR}/mmc-agent/assets/config-plugin.sh "$MMC_AGENT_PPOLICY_PLUGIN_CONFIG" /etc/mmc/plugins/ppolicy.ini
+  cp -f /etc/mmc/plugins/ppolicy.ini ${CONTAINER_SERVICE_DIR}/mmc-agent/assets/ppolicy.ini
 
   touch $FIRST_START_DONE
 fi
+
+ln -sf ${CONTAINER_SERVICE_DIR}/mmc-agent/assets/ppolicy.ini /etc/mmc/plugins/ppolicy.ini 
 
 exit 0
