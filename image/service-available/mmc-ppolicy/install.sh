@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
-dpkg -i /container/service-available/mmc-ppolicy/assets/package/python-mmc-ppolicy_3.1.1-3_all.deb
-rm -rf /container/service-available/mmc-ppolicy/assets/package/
+dpkg -i /container/service/mmc-ppolicy/assets/package/python-mmc-ppolicy_3.1.1-3_all.deb
+rm -rf /container/service/mmc-ppolicy/assets/package/
 
 # change default plugin configuration
 sed -i -e "s/#*\s*disable\s*=.*/disable = 0/" /etc/mmc/plugins/ppolicy.ini
