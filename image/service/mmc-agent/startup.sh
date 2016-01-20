@@ -4,7 +4,6 @@
 # https://github.com/osixia/docker-light-baseimage/blob/stable/image/tool/log-helper
 log-helper level eq trace && set -x
 
-
 FIRST_START_DONE="${CONTAINER_STATE_DIR}/docker-mmc-agent-first-start-done"
 # container first start
 if [ ! -e "$FIRST_START_DONE" ]; then
@@ -12,7 +11,7 @@ if [ ! -e "$FIRST_START_DONE" ]; then
   # SSL config
   if [ "${MMC_AGENT_HTTPS,,}" == "true" ]; then
 
-    echo "Use ssl"
+    log-helper info "Use ssl"
     sed -i --follow-symlinks -e "s|#*\s*enablessl\s*=.*|enablessl = 1|" /etc/mmc/agent/config.ini
 
     # check certificat and key or create it
@@ -21,7 +20,7 @@ if [ ! -e "$FIRST_START_DONE" ]; then
     # verify peer ?
     if [ "${MMC_AGENT_HTTPS_VERIFY_PEER,,}" == "true" ]; then
 
-      echo "Verify peer"
+      log-helper info "Verify peer"
       sed -i --follow-symlinks -e "s|#*\s*verifypeer\s*=.*|verifypeer = 1|" /etc/mmc/agent/config.ini
 
       # mmc agent need a pem file with the crt and the key
@@ -32,7 +31,7 @@ if [ ! -e "$FIRST_START_DONE" ]; then
 
     else
 
-      echo "Don't verify peer"
+      log-helper info "Don't verify peer"
       sed -i --follow-symlinks -e "s|#*\s*verifypeer\s*=.*|verifypeer = 0|" /etc/mmc/agent/config.ini
 
       sed -i --follow-symlinks -e "s|#*\s*localcert\s*=.*|localcert = ${CONTAINER_SERVICE_DIR}/mmc-agent/assets/certs/$MMC_AGENT_HTTPS_KEY_FILENAME|" /etc/mmc/agent/config.ini
