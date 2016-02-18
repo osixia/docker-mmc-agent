@@ -27,7 +27,7 @@ RUN apt-get -y update \
 # Add service directory to /container/service
 ADD service /container/service
 
-# Use baseimage install-service script, image specific service-available and clean all
+# Use baseimage install-service script, image specific service-available
 # https://github.com/osixia/docker-light-baseimage/blob/stable/image/tool/install-service
 RUN /container/tool/install-service
 
