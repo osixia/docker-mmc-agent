@@ -10,7 +10,7 @@ FIRST_START_DONE="${CONTAINER_STATE_DIR}/docker-mmc-agent-mail-first-start-done"
 if [ ! -e "$FIRST_START_DONE" ]; then
 
   # mail plugin configuration
-  ${CONTAINER_SERVICE_DIR}/mmc-agent/assets/config-plugin.sh "$MMC_AGENT_MAIL_PLUGIN_CONFIG" /etc/mmc/plugins/mail.ini
+  ${CONTAINER_SERVICE_DIR}/mmc-agent/assets/config-plugin.sh "MMC_AGENT_MAIL_PLUGIN_CONFIG" /etc/mmc/plugins/mail.ini
   cp -f /etc/mmc/plugins/mail.ini ${CONTAINER_SERVICE_DIR}/mmc-agent/assets/mail.ini
 
   touch $FIRST_START_DONE

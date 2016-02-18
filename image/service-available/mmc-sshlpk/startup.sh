@@ -10,7 +10,7 @@ FIRST_START_DONE="${CONTAINER_STATE_DIR}/docker-mmc-agent-sshlpk-first-start-don
 if [ ! -e "$FIRST_START_DONE" ]; then
 
    # sshlpk plugin configuration
-   ${CONTAINER_SERVICE_DIR}/mmc-agent/assets/config-plugin.sh "$MMC_AGENT_SSHLPK_PLUGIN_CONFIG" /etc/mmc/plugins/sshlpk.ini
+   ${CONTAINER_SERVICE_DIR}/mmc-agent/assets/config-plugin.sh "MMC_AGENT_SSHLPK_PLUGIN_CONFIG" /etc/mmc/plugins/sshlpk.ini
    cp -f /etc/mmc/plugins/sshlpk.ini ${CONTAINER_SERVICE_DIR}/mmc-agent/assets/sshlpk.ini
 
   touch $FIRST_START_DONE

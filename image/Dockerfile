@@ -20,16 +20,16 @@ RUN apt-get -y update \
        python-psutil \
        python-sqlalchemy \
        python-support \
-       python-twisted-web
+       python-twisted-web \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Add service directory to /container/service
 ADD service /container/service
 
 # Use baseimage install-service script, image specific service-available and clean all
 # https://github.com/osixia/docker-light-baseimage/blob/stable/image/tool/install-service
-RUN /container/tool/install-service \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN /container/tool/install-service
 
 # Add default env variables
 ADD environment /container/environment/99-default

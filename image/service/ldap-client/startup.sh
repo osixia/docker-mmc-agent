@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 
 # set -x (bash debug) if log level is trace
 # https://github.com/osixia/docker-light-baseimage/blob/stable/image/tool/log-helper
@@ -10,10 +10,9 @@ FIRST_START_DONE="${CONTAINER_STATE_DIR}/docker-ldap-client-first-start-done"
 if [ ! -e "$FIRST_START_DONE" ]; then
 
   # ldap tls config
-  LDAP_VERIFY_PEER=$(${CONTAINER_SERVICE_DIR}/mmc-agent/assets/get-config.sh "$MMC_AGENT_BASE_PLUGIN_CONFIG" "ldap ldapverifypeer")
-  LDAP_CA_CERT=$(${CONTAINER_SERVICE_DIR}/mmc-agent/assets/get-config.sh "$MMC_AGENT_BASE_PLUGIN_CONFIG" "ldap cacert")
-  LDAP_CLIENT_CERT=$(${CONTAINER_SERVICE_DIR}/mmc-agent/assets/get-config.sh "$MMC_AGENT_BASE_PLUGIN_CONFIG" "ldap localcert")
-  LDAP_CLIENT_KEY=$(${CONTAINER_SERVICE_DIR}/mmc-agent/assets/get-config.sh "$MMC_AGENT_BASE_PLUGIN_CONFIG" "ldap localkey")
+  LDAP_CA_CERT=$(${CONTAINER_SERVICE_DIR}/mmc-agent/assets/get-config.sh "MMC_AGENT_BASE_PLUGIN_CONFIG" "ldap cacert")
+  LDAP_CLIENT_CERT=$(${CONTAINER_SERVICE_DIR}/mmc-agent/assets/get-config.sh "MMC_AGENT_BASE_PLUGIN_CONFIG" "ldap localcert")
+  LDAP_CLIENT_KEY=$(${CONTAINER_SERVICE_DIR}/mmc-agent/assets/get-config.sh "MMC_AGENT_BASE_PLUGIN_CONFIG" "ldap localkey")
 
   if [ ! -z "$LDAP_CA_CERT" ] && [ ! -z "$LDAP_CLIENT_CERT" ] && [ ! -z "$LDAP_CLIENT_KEY" ]; then
 
@@ -23,9 +22,6 @@ if [ ! -e "$FIRST_START_DONE" ]; then
 
     # ldap client config
     sed -i --follow-symlinks "s,TLS_CACERT.*,TLS_CACERT ${LDAP_CA_CERT},g" /etc/ldap/ldap.conf
-    if [ ! -z "$LDAP_VERIFY_PEER" ]; then
-      echo "TLS_REQCERT $LDAP_VERIFY_PEER" >> /etc/ldap/ldap.conf
-    fi
     cp -f /etc/ldap/ldap.conf ${CONTAINER_SERVICE_DIR}/ldap-client/assets/ldap.conf
 
     [[ -f "$HOME/.ldaprc" ]] && rm -f $HOME/.ldaprc

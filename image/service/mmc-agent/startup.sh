@@ -45,10 +45,14 @@ if [ ! -e "$FIRST_START_DONE" ]; then
   fi
 
   # mmc agent config
-  ${CONTAINER_SERVICE_DIR}/mmc-agent/assets/config-plugin.sh "$MMC_AGENT_CONFIG" /etc/mmc/agent/config.ini
+  ${CONTAINER_SERVICE_DIR}/mmc-agent/assets/config-plugin.sh "MMC_AGENT_CONFIG" /etc/mmc/agent/config.ini
 
   # base plugin configuration
-  ${CONTAINER_SERVICE_DIR}/mmc-agent/assets/config-plugin.sh "$MMC_AGENT_BASE_PLUGIN_CONFIG" /etc/mmc/plugins/base.ini
+  ${CONTAINER_SERVICE_DIR}/mmc-agent/assets/config-plugin.sh "MMC_AGENT_BASE_PLUGIN_CONFIG" /etc/mmc/plugins/base.ini
+
+  cat /etc/mmc/agent/config.ini
+
+  cat /etc/mmc/plugins/base.ini
 
   cp -f /etc/mmc/agent/config.ini ${CONTAINER_SERVICE_DIR}/mmc-agent/assets/config.ini
   cp -f /etc/mmc/plugins/base.ini ${CONTAINER_SERVICE_DIR}/mmc-agent/assets/base.ini
