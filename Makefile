@@ -1,5 +1,5 @@
 NAME = osixia/mmc-agent
-VERSION = 1.0.1
+VERSION = 1.0.2
 
 .PHONY: all build build-nocache test tag_latest release
 
