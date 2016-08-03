@@ -8,7 +8,7 @@ ADD service-available /container/service-available/
 
 # Install mmc-agent
 RUN apt-get -y update \
-    && /container/tool/add-service-available mmc-mail mmc-sshlpk :cfssl \
+    && /container/tool/add-service-available mmc-mail mmc-sshlpk :ssl-tools \
     && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes --no-install-recommends \
        ldap-utils \
        libnss-ldap \
