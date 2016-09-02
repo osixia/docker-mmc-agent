@@ -15,7 +15,7 @@ if [ ! -e "$FIRST_START_DONE" ]; then
     sed -i --follow-symlinks -e "s|#*\s*enablessl\s*=.*|enablessl = 1|" /etc/mmc/agent/config.ini
 
     # check certificat and key or create it
-    cfssl-helper ${MMC_AGENT_CFSSL_PREFIX} "${CONTAINER_SERVICE_DIR}/mmc-agent/assets/certs/$MMC_AGENT_HTTPS_CRT_FILENAME" "${CONTAINER_SERVICE_DIR}/mmc-agent/assets/certs/$MMC_AGENT_HTTPS_KEY_FILENAME" "${CONTAINER_SERVICE_DIR}/mmc-agent/assets/certs/$MMC_AGENT_HTTPS_CA_CRT_FILENAME"
+    ssl-helper ${MMC_AGENT_SSL_HELPER_PREFIX} "${CONTAINER_SERVICE_DIR}/mmc-agent/assets/certs/$MMC_AGENT_HTTPS_CRT_FILENAME" "${CONTAINER_SERVICE_DIR}/mmc-agent/assets/certs/$MMC_AGENT_HTTPS_KEY_FILENAME" "${CONTAINER_SERVICE_DIR}/mmc-agent/assets/certs/$MMC_AGENT_HTTPS_CA_CRT_FILENAME"
 
     # verify peer ?
     if [ "${MMC_AGENT_HTTPS_VERIFY_PEER,,}" == "true" ]; then

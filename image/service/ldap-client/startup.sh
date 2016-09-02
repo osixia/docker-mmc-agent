@@ -17,8 +17,8 @@ if [ ! -e "$FIRST_START_DONE" ]; then
   if [ ! -z "$LDAP_CA_CERT" ] && [ ! -z "$LDAP_CLIENT_CERT" ] && [ ! -z "$LDAP_CLIENT_KEY" ]; then
 
     # generate a certificate and key if files don't exists
-    # https://github.com/osixia/docker-light-baseimage/blob/stable/image/service-available/:cfssl/assets/tool/cfssl-helper
-    cfssl-helper ${LDAP_CLIENT_CFSSL_PREFIX} "$LDAP_CLIENT_CERT" "$LDAP_CLIENT_KEY" "$LDAP_CA_CERT"
+    # https://github.com/osixia/docker-light-baseimage/blob/stable/image/service-available/:ssl-tools/assets/tool/ssl-helper
+    ssl-helper ${LDAP_CLIENT_SSL_HELPER_PREFIX} "$LDAP_CLIENT_CERT" "$LDAP_CLIENT_KEY" "$LDAP_CA_CERT"
 
     # ldap client config
     sed -i --follow-symlinks "s,TLS_CACERT.*,TLS_CACERT ${LDAP_CA_CERT},g" /etc/ldap/ldap.conf

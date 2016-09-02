@@ -1,6 +1,6 @@
 # Use osixia/light-baseimage
 # sources: https://github.com/osixia/docker-light-baseimage
-FROM osixia/light-baseimage:0.2.4
+FROM osixia/light-baseimage:0.2.5
 MAINTAINER Bertrand Gouny <bertrand.gouny@osixia.net>
 
 # Add service-available directory to /container/service-available
@@ -8,7 +8,7 @@ ADD service-available /container/service-available/
 
 # Install mmc-agent
 RUN apt-get -y update \
-    && /container/tool/add-service-available mmc-mail mmc-sshlpk :cfssl \
+    && /container/tool/add-service-available mmc-mail mmc-sshlpk :ssl-tools \
     && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes --no-install-recommends \
        ldap-utils \
        libnss-ldap \
