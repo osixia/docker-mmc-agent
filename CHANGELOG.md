@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.4
+  - Upgrade baseimage: light-baseimage:0.2.6
+
 ## 1.0.3
   - Upgrade baseimage: light-baseimage:0.2.5
   - Update mmc packages
