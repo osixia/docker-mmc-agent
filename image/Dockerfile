@@ -1,6 +1,6 @@
 # Use osixia/light-baseimage
 # sources: https://github.com/osixia/docker-light-baseimage
-FROM osixia/light-baseimage:1.0.0
+FROM osixia/light-baseimage:1.0.1
 MAINTAINER Bertrand Gouny <bertrand.gouny@osixia.net>
 
 # Add service-available directory to /container/service-available

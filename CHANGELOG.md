@@ -1,7 +1,7 @@
 # Changelog
 
 ## 1.1.0
-  - Upgrade baseimage: light-baseimage:1.1.0 (debian stretch)
+  - Upgrade baseimage: light-baseimage:1.0.1
 
 ## 1.0.4
   - Upgrade baseimage: light-baseimage:0.2.6
