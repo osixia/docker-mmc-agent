@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-dpkg -i /container/service/mmc-ppolicy/assets/package/python-mmc-ppolicy_3.1.1-3_all.deb
+dpkg -i /container/service/mmc-ppolicy/assets/package/python-mmc-ppolicy_3.9.90-10_all.deb
 rm -rf /container/service/mmc-ppolicy/assets/package/
 
 # change default plugin configuration
