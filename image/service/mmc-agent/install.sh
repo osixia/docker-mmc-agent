@@ -1,10 +1,10 @@
 #!/bin/bash -e
 # this script is run during the image build
 
-dpkg -i /container/service/mmc-agent/assets/package/python-mmc-core_3.9.90-10_all.deb
-dpkg -i /container/service/mmc-agent/assets/package/python-mmc-base_3.9.90-10_all.deb
-dpkg -i /container/service/mmc-agent/assets/package/python-mmc-dashboard_3.9.90-10_all.deb
-dpkg -i /container/service/mmc-agent/assets/package/mmc-agent_3.9.90-10_all.deb
+dpkg -i /container/service/mmc-agent/assets/package/python-mmc-core_3.9.92-1_all
+dpkg -i /container/service/mmc-agent/assets/package/python-mmc-base_3.9.92-1_all.deb
+dpkg -i /container/service/mmc-agent/assets/package/python-mmc-dashboard_3.9.92-1_all
+dpkg -i /container/service/mmc-agent/assets/package/mmc-agent_3.9.92-1_all.deb
 
 rm -rf /container/service/mmc-agent/assets/package
 
