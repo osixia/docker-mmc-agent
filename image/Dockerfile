@@ -21,6 +21,7 @@ RUN apt-get -y update \
        python-sqlalchemy \
        python-support \
        python-twisted-web \
+       python-xlwt \
     && apt-get remove -y --purge --auto-remove curl ca-certificates \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
