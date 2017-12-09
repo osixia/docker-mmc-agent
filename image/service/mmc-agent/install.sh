@@ -10,5 +10,6 @@ rm -rf /container/service/mmc-agent/assets/package
 
 # mmc-agent config
 sed -i -e "s/#*\s*host\s*=.*/host = 0.0.0.0/" /etc/mmc/agent/config.ini
+sed -i -e "s|#*\s*userHomeAction\s*=.*|userHomeAction = 0|" /etc/mmc/plugins/base.ini
 
 mkdir -p /home/archives /var/log/mmc/
