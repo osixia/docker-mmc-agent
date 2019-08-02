@@ -1,5 +1,9 @@
 #!/bin/bash -e
 
+# set -x (bash debug) if log level is trace
+# https://github.com/osixia/docker-light-baseimage/blob/stable/image/tool/log-helper
+log-helper level eq trace && set -x
+
 # Handle mmc plugin config files
 # usage : config-plugin.sh plugin_variable /path/to/config/file
 
@@ -27,10 +31,10 @@ plugin_config() {
       fi
 
       # delete key in the section
-      sed -i --follow-symlinks '/\['$sect'\]/,/\[/{/\['$sect'\]/n;/\[/!{/#*\s*'$key'\s*=.*/d}}' $CONFIG_FILE
+      sed -i --follow-symlinks "/\[$sect\]/,/\[/{/\[$sect\]/n;/\[/!{/#*\s*$key\s*=.*/d}}" $CONFIG_FILE
 
       # append new key value in section
-      sed -i --follow-symlinks '/\['$sect'\]/a '$key' = '$value $CONFIG_FILE
+      sed -i --follow-symlinks "/\[$sect\]/a $key = $value" $CONFIG_FILE
     fi
   done
 }

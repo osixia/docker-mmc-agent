@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.2.0
+### Added
+  - MMC_AGENT_DASHBOARD_PLUGIN_CONFIG environment variable
+  - mmc-agent now run with image log level
+
+### Changed
+  - Update mmc packages
+  - Upgrade baseimage: light-baseimage:1.2.0
+
+### Fixed
+  - Now correctly handles configuration string with spaces
+
 ## 1.1.1
   - Update mmc packages
   - Upgrade baseimage: light-baseimage:1.0.2

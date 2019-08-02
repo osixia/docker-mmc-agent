@@ -1,27 +1,29 @@
 # Use osixia/light-baseimage
 # sources: https://github.com/osixia/docker-light-baseimage
-FROM osixia/light-baseimage:1.0.2
-MAINTAINER Bertrand Gouny <bertrand.gouny@osixia.net>
+FROM osixia/light-baseimage:release-1.2.0-dev
 
 # Add service-available directory to /container/service-available
 ADD service-available /container/service-available/
 
+# Required for python-ldap 2.4
+RUN echo "deb http://ftp.debian.org/debian stretch main" >> /etc/apt/sources.list
+
 # Install mmc-agent
 RUN apt-get -y update \
-    && /container/tool/add-service-available mmc-mail mmc-sshlpk :ssl-tools \
+    && /container/tool/add-service-available mmc-mail mmc-ppolicy mmc-sshlpk :ssl-tools \
     && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-       ldap-utils \
-       libnss-ldap \
-       python \
-       python-gobject \
-       python-ldap \
-       python-mysqldb \
-       python-openssl \
-       python-psutil \
-       python-sqlalchemy \
-       python-support \
-       python-twisted-web \
-       python-xlwt \
+    ldap-utils \
+    libnss-ldap \
+    python \
+    python-gobject \
+    python-memory-profiler \
+    python-mysqldb \
+    python-openssl \
+    python-psutil \
+    python-sqlalchemy \
+    python-twisted-web \
+    python-xlwt \
+    && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get -t stretch install -y --no-install-recommends python-ldap \
     && apt-get remove -y --purge --auto-remove curl ca-certificates \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
